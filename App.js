@@ -9,7 +9,7 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
-import { AdventuresApiClient } from './Dist/AdventuresApi/lib/adventuresApiClient'
+import { Router, Stack, Scene, Actions } from 'react-native-router-flux'
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -18,15 +18,41 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-type Props = {};
-export default class App extends Component<Props> {
+
+class ComponentA extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+        <Text style={styles.welcome} onPress={() => Actions.sceneB()}>Scene A!</Text>
       </View>
+    );
+  }
+}
+
+class ComponentB extends Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.welcome}>Scene B!</Text>
+      </View>
+    );
+  }
+}
+
+export default class App extends Component {
+  backAndroidHandler() {
+    console.log("backAndroidHandler fired")
+    return false
+  }
+
+  render() {
+    return (
+      <Router backAndroidHandler={this.backAndroidHandler}>
+        <Stack key="root">
+          <Scene key="sceneA" component={ComponentA} title="Scene A" inital/>
+          <Scene key="sceneB" component={ComponentB} title="Scene B"/>
+        </Stack>
+      </Router>
     );
   }
 }
